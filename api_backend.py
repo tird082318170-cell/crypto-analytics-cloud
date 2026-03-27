@@ -15,7 +15,7 @@ app.add_middleware(
 )
 
 # Usando la Connection String directamente
-DB_URL = "postgresql://postgres:[Cesarmvaldez2001!]@db.xxxx.supabase.co:5432/postgres"
+DB_URL = "postgresql://postgres:[sRtBUzTstyxFyfwc]@db.xxxx.supabase.co:5432/postgres"
 
 def get_db_connection():
     try:
