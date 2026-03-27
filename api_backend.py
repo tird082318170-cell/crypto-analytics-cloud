@@ -19,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("postgresql://postgres:sRtBUzTstyxFyfwc@db.xxxx.supabase.co:5432/postgres")
 
 def get_db_connection():
     try:
