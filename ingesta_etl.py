@@ -8,7 +8,7 @@ from datetime import datetime
 
 # 1. Conexiones (Manteniendo el puerto 5433 que solucionó el problema)
 r = redis.Redis(host='192.168.0.88', port=6379, db=0)
-conn = psycopg2.connect("postgresql://postgres:[Cesarmvaldez2001!]@db.xxxx.supabase.co:5432/postgres")
+conn = psycopg2.connect("postgresql://postgres:[sRtBUzTstyxFyfwc]@db.xxxx.supabase.co:5432/postgres")
 conn.autocommit = True  # Facilita la creación y alteración de tablas
 cur = conn.cursor()
 
