@@ -6,7 +6,7 @@ from datetime import datetime
 
 # 1. Conexión a Supabase (REEMPLAZA TU_PASSWORD)
 # Asegúrate de quitar los corchetes [] al poner tu contraseña
-URL_DB = "postgresql://postgres.bsikaqyhjcraxjmkztpi:sRtBUzTstyxFyfwc@aws-1-us-east-1.pooler.supabase.com:6543/postgres"
+URL_DB = "postgresql://postgres:3FNvGAK1xToGd4tD@db.bsikaqyhjcraxjmkztpi.supabase.co:5432/postgres"
 
 def conectar_db():
     try:
