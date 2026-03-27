@@ -6,7 +6,7 @@ from datetime import datetime
 
 # Configuración de la base de datos
 # En lugar de usar host, port, etc., usa la URL:
-conn = psycopg2.connect("postgresql://postgres.bsikaqyhjcraxjmkztpi:sRtBUzTstyxFyfwc@aws-1-us-east-1.pooler.supabase.com:6543/postgres")
+conn = psycopg2.connect("postgresql://postgres:3FNvGAK1xToGd4tD@db.bsikaqyhjcraxjmkztpi.supabase.co:5432/postgres")
 
 # Carpeta donde se guardarán los backups (Simula el Azure Blob Storage)
 BACKUP_DIR = "./backups"
