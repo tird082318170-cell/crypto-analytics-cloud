@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Market Analytics - SaaS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white font-sans flex items-center justify-center min-h-screen">
+
+    <div id="login-screen" class="bg-slate-800 p-8 rounded-xl shadow-2xl w-96 border border-slate-700">
+        <h2 class="text-2xl font-bold mb-6 text-center text-blue-400">Crypto Analytics SaaS</h2>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm text-slate-400 mb-1">Usuario</label>
+                <input type="text" id="username" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500" value="cliente">
+            </div>
+            <div>
+                <label class="block text-sm text-slate-400 mb-1">Contraseña</label>
+                <input type="password" id="password" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500" value="secreto123">
+            </div>
+            <button onclick="hacerLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors mt-4">
+                Ingresar al Sistema
+            </button>
+            <p id="login-error" class="text-red-400 text-sm text-center hidden mt-2">Credenciales incorrectas</p>
+        </div>
+    </div>
+
+    <div id="dashboard-screen" class="hidden w-full max-w-4xl p-8">
+        <div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4">
+            <h1 class="text-3xl font-bold text-blue-400">Panel de Mercado en Tiempo Real</h1>
+            <button onclick="cerrarSesion()" class="text-sm text-slate-400 hover:text-white transition-colors">Cerrar Sesión</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4">
+                    <span class="bg-yellow-500/20 text-yellow-500 text-xs font-bold px-2 py-1 rounded-full border border-yellow-500/50">BTC/USD</span>
+                </div>
+                <h3 class="text-slate-400 font-medium mb-2">Precio de Bitcoin</h3>
+                <div id="btc-price" class="text-4xl font-bold mb-4">Cargando...</div>
+                <div class="flex justify-between text-sm">
+                    <div>
+                        <span class="text-slate-400">Variación:</span>
+                        <span id="btc-var" class="font-bold">--</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400">Media Móvil:</span>
+                        <span id="btc-media" class="font-bold text-blue-300">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <p class="text-center text-slate-500 text-xs mt-8">Protegido por Autenticación JWT y TLS 1.3</p>
+    </div>
+
+    <script>
+        let tokenSaaS = "";
+
+        async function hacerLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const errorMsg = document.getElementById('login-error');
+
+            try {
+                const response = await fetch(' https://maryanna-subacrid-conceivably.ngrok-free.dev/api/v1/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario: user, password: pass })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    tokenSaaS = data.access_token; // Guardamos el token de seguridad
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('dashboard-screen').classList.remove('hidden');
+                    errorMsg.classList.add('hidden');
+                    obtenerDatosMercado(); // Llamamos a la API
+                    setInterval(obtenerDatosMercado, 30000); // Actualizar cada 30 seg
+                } else {
+                    errorMsg.classList.remove('hidden');
+                }
+            } catch (error) {
+                errorMsg.innerText = "Error conectando al servidor";
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        async function obtenerDatosMercado() {
+            if (!tokenSaaS) return;
+
+            try {
+                // Enviamos la petición CON nuestro token de seguridad
+                const response = await fetch('http://192.168.0.88:8000/api/v1/precios/bitcoin', {
+                    headers: { 'Authorization': `Bearer ${tokenSaaS}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Actualizar la tarjeta bonita
+                    document.getElementById('btc-price').innerText = `$${data.price_usd.toLocaleString()}`;
+                    document.getElementById('btc-media').innerText = `$${data.media_movil.toLocaleString()}`;
+                    
+                    const varEl = document.getElementById('btc-var');
+                    varEl.innerText = `${data.var_porcentual}%`;
+                    varEl.className = data.var_porcentual >= 0 ? 'text-green-400 font-bold' : 'text-red-400 font-bold';
+                }
+            } catch (error) {
+                console.error("Error obteniendo datos", error);
+            }
+        }
+
+        function cerrarSesion() {
+            tokenSaaS = "";
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
